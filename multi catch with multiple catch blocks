@@ -1,0 +1,25 @@
+public class MultiCatchWithMoreCatches {
+    public static void main(String[] args) {
+        try {
+            String text = null;
+            int[] arr = new int[3];
+
+            // Causes exception: Uncomment one at a time to test
+            // int result = 10 / 0;                      // ArithmeticException
+            // int num = arr[5];                         // ArrayIndexOutOfBoundsException
+            int value = Integer.parseInt(text);          // NullPointerException or NumberFormatException
+
+        } catch (ArithmeticException | ArrayIndexOutOfBoundsException e) {
+            System.out.println("Caught Arithmetic or ArrayIndex exception: " + e);
+        } catch (NumberFormatException e) {
+            System.out.println("Caught NumberFormatException: " + e);
+        } catch (NullPointerException e) {
+            System.out.println("Caught NullPointerException: " + e);
+        } catch (Exception e) {
+            // Catch-all block for any other exceptions
+            System.out.println("Caught some other Exception: " + e);
+        }
+
+        System.out.println("Program finished.");
+    }
+}
