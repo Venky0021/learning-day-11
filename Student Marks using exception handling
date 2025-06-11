@@ -1,0 +1,77 @@
+import java.io.*;
+import java.util.*;
+
+public class StudentMarksApp {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String fileName = "student_marks.txt";
+
+        try {
+            System.out.print("Enter number of students: ");
+            int n = Integer.parseInt(scanner.nextLine());
+            int[] marks = new int[n];
+
+            for (int i = 0; i < n; i++) {
+                try {
+                    System.out.print("Enter marks for student " + (i + 1) + ": ");
+                    marks[i] = Integer.parseInt(scanner.nextLine());
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid integer.");
+                    i--; // repeat the loop for the same student
+                }
+            }
+
+            // Write marks to a file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+                writer.write("Student Marks:\n");
+                for (int mark : marks) {
+                    writer.write(mark + "\n");
+                }
+                System.out.println("Marks successfully written to " + fileName);
+            } catch (IOException e) {
+                System.out.println("Error writing to file: " + e.getMessage());
+            }
+
+            // Read file and calculate average
+            try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+                String line;
+                int total = 0, count = 0;
+
+                while ((line = reader.readLine()) != null) {
+                    if (!line.equals("Student Marks:")) {
+                        total += Integer.parseInt(line);
+                        count++;
+                    }
+                }
+
+                try {
+                    int average = total / count; // might throw ArithmeticException if count == 0
+                    System.out.println("Average Marks: " + average);
+                } catch (ArithmeticException e) {
+                    System.out.println("Error: Cannot divide by zero (no students found).");
+                }
+
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found: " + fileName);
+            } catch (IOException | NumberFormatException e) {
+                System.out.println("Error reading file: " + e);
+            }
+
+            // Just for demo: trigger ArrayIndexOutOfBounds
+            try {
+                System.out.println("Accessing out-of-bounds index: " + marks[n]); // invalid index
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Caught exception: " + e);
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("Please enter a valid number of students.");
+        } catch (Exception e) {
+            System.out.println("Unexpected error: " + e);
+        }
+
+        System.out.println("Application finished.");
+        scanner.close();
+    }
+}
